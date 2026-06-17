@@ -1,8 +1,14 @@
 {
   "redirects": [
     {
-      "source": "/*",
-      "destination": "https://www.tokenmetrics.com/*",
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "https://www.tokenmetrics.org/"
+        }
+      ],
+      "destination": "https://tokenmetrics.com/$1",
       "permanent": true
     }
   ]
