@@ -170,9 +170,10 @@ h1, h2, h3, .display {
   flex-shrink: 0;
 }
 .mark {
-  width: 26px;
-  height: 26px;
+  width: 34px;
+  height: 34px;
   display: block;
+  object-fit: contain;
 }
 .nav-links {
   display: flex;
@@ -802,9 +803,11 @@ footer a:hover { color: var(--muted); }
 }
 .secure-grid, .pillar-grid { grid-template-columns: repeat(3, 1fr); }
 .eco-grid, .post-grid { grid-template-columns: repeat(3, 1fr); }
+.job-grid { grid-template-columns: repeat(2, 1fr); }
 .story-grid { grid-template-columns: 1fr; gap: 18px; }
 .eco, .post, .job { padding: 22px; }
 .eco h3, .post h3, .job h3 { font-family: var(--sans); font-weight: 500; letter-spacing: -0.02em; font-size: 18px; margin-top: 8px; }
+.job p { margin: 6px 0 0; }
 .kicker { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--olive-deep, #6d8744); font-weight: 600; }
 .story {
   display: grid;
@@ -1044,7 +1047,7 @@ html.site-motion {
     font-size: 18px;
     color: var(--ink);
   }
-  .stats, .cards-2, .steps, .logo-wall, .secure-grid, .eco-grid, .post-grid, .pillar-grid, .more-grid, .product-grid, .split, .newsletter, .foot-grid, .workflow, .deposit, .token-layout, .two, .story {
+  .stats, .cards-2, .steps, .logo-wall, .secure-grid, .eco-grid, .post-grid, .job-grid, .pillar-grid, .more-grid, .product-grid, .split, .newsletter, .foot-grid, .workflow, .deposit, .token-layout, .two, .story {
     grid-template-columns: 1fr;
   }
   .logo-wall { grid-template-columns: repeat(2, 1fr); }

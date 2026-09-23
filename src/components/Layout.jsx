@@ -3,6 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import Nav from "./Nav.jsx";
 import Footer from "./Footer.jsx";
 import { useSiteMotion } from "./motion.jsx";
+import { findRole } from "../data.js";
 
 const titles = {
   "/": "Token Metrics | Infrastructure for tokenized assets",
@@ -24,11 +25,14 @@ export default function Layout() {
   const { pathname, hash } = useLocation();
   useSiteMotion();
   useEffect(() => {
+    const role = pathname.startsWith("/careers/") ? findRole(pathname.slice("/careers/".length)) : null;
     document.title = pathname.startsWith("/products/")
       ? "Product | Token Metrics"
       : pathname.startsWith("/news/")
         ? "News | Token Metrics"
-        : titles[pathname] || "Token Metrics";
+        : role
+          ? `${role.title} | Token Metrics`
+          : titles[pathname] || "Token Metrics";
     if (hash) {
       const el = document.querySelector(hash);
       if (el) {

@@ -1,13 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-export function Mark({ size = 26 }) {
+export function Mark({ size = 34 }) {
   return (
-    <svg className="mark" width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
-      <rect width="32" height="32" rx="8" fill="#171717" />
-      <path d="M8 9.2h3.1l4.9 8.2 4.9-8.2H24l-6.6 10.6V23h-2.8v-3.2L8 9.2Z" fill="#f6f5f1" />
-      <rect x="22.5" y="20" width="4" height="4" rx="1" fill="#839f55" />
-    </svg>
+    <img className="mark" src="/logo.png" width={size} height={size} alt="" />
   );
 }
 

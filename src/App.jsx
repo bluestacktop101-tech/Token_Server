@@ -4,6 +4,7 @@ import Home from "./pages/Home.jsx";
 import {
   Article,
   Careers,
+  Role,
   Community,
   Company,
   Contact,
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="news" element={<News />} />
         <Route path="news/:slug" element={<Article />} />
         <Route path="careers" element={<Careers />} />
+        <Route path="careers/:slug" element={<Role />} />
         <Route path="company" element={<Company />} />
         <Route path="contact" element={<Contact />} />
         <Route path="privacy" element={<PrivacyPolicy />} />

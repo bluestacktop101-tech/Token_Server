@@ -221,12 +221,12 @@ Authorization: Bearer YOUR_API_KEY`}</pre>
         <div className="wrap split">
           <div>
             <div className="eyebrow">Careers</div>
-            <h2 className="display-s" style={{ marginTop: 8 }}>Based in Zug</h2>
+            <h2 className="display-s" style={{ marginTop: 8 }}>Build the infrastructure for on-chain markets.</h2>
             <p className="lede" style={{ marginTop: 14 }}>
-              {company.legalName} is a private technology company. The office is at {company.address}.
+              We're building a technology company at the intersection of financial markets, blockchain infrastructure, and real-world assets.
             </p>
             <div style={{ marginTop: 18 }}>
-              <Link className="btn" to="/contact">Contact</Link>
+              <Link className="btn" to="/careers">Open roles</Link>
             </div>
           </div>
           <figure className="figure">

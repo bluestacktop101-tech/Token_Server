@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { apiResources, builderUses, company, docTopics, ecosystem, findPost, findProduct, integrationNote, integrations, markets, postRedirects, posts, products, socials, stack } from "../data.js";
+import { apiResources, builderUses, company, docTopics, ecosystem, findPost, findProduct, findRole, integrationNote, integrations, markets, postRedirects, posts, products, roles, socials, stack } from "../data.js";
 import { BrandLogo } from "../components/logos.jsx";
 import { Faq, PageHero, TextLink } from "../components/ui.jsx";
 
@@ -343,23 +343,75 @@ export function Careers() {
     <>
       <PageHero
         eyebrow="Careers"
-        title="Token Metrics AG, Zug."
-        lede={`Open roles are not listed yet. Write to ${company.supportEmail}.`}
+        title="Build the infrastructure for on-chain markets."
+        lede="We're building a technology company at the intersection of financial markets, blockchain infrastructure, and real-world assets."
       />
       <section className="band" style={{ paddingTop: 8 }}>
-        <div className="wrap" style={{ maxWidth: 720 }}>
-          <article className="panel">
-            <div className="eyebrow">{company.location}</div>
-            <h2 className="display-s" style={{ marginTop: 8 }}>{company.legalName}</h2>
-            <p>{company.address}</p>
-            <p className="muted">{company.type}</p>
-            <div style={{ marginTop: 16 }}>
-              <TextLink to="/contact">Contact</TextLink>
-            </div>
-          </article>
+        <div className="wrap">
+          <div className="section-head left">
+            <h2 className="display-s">Open Roles</h2>
+          </div>
+          <div className="job-grid">
+            {roles.map((role) => (
+              <article className="job" key={role.title}>
+                <h3>{role.slug ? <Link to={`/careers/${role.slug}`}>{role.title}</Link> : role.title}</h3>
+                <p className="muted">Location: {role.location}</p>
+                <p className="muted">Type: {role.type}</p>
+                <div style={{ marginTop: 16 }}>
+                  {role.slug ? (
+                    <TextLink to={`/careers/${role.slug}`}>View role</TextLink>
+                  ) : (
+                    <TextLink href={`mailto:${company.supportEmail}?subject=${encodeURIComponent(`Application — ${role.title}`)}`}>Apply</TextLink>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
     </>
+  );
+}
+
+export function Role() {
+  const { slug } = useParams();
+  const role = findRole(slug);
+  if (!role) {
+    return (
+      <div className="wrap page-hero">
+        <h1 className="display-s">Role not found</h1>
+        <Link to="/careers">Back to careers</Link>
+      </div>
+    );
+  }
+  const apply = `mailto:${company.supportEmail}?subject=${encodeURIComponent(`Application — ${role.title}`)}`;
+  return (
+    <article className="band">
+      <div className="wrap article prose" style={{ maxWidth: 760 }}>
+        <Link to="/careers" className="muted">← Careers</Link>
+        <h1 className="display-s" style={{ marginTop: 18 }}>{role.title}</h1>
+        <p className="updated">Location: {role.location}</p>
+        <p className="updated">Type: {role.type}</p>
+        {role.sections?.map((section) => (
+          <div key={section.heading}>
+            <h2>{section.heading}</h2>
+            {section.paragraphs?.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+            {section.list ? (
+              <ul>
+                {section.list.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
+        ))}
+        <div style={{ marginTop: 28 }}>
+          <a className="btn" href={apply}>Apply</a>
+        </div>
+      </div>
+    </article>
   );
 }
 
