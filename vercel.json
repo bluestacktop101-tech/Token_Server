@@ -1,26 +1,9 @@
 {
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.tokenmetrics.org"
-        }
-      ],
-      "destination": "https://tokenmetrics.com/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "tokenmetrics.org"
-        }
-      ],
-      "destination": "https://tokenmetrics.com/:path*",
-      "permanent": true
-    }
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
