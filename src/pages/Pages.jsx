@@ -1,8 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { apiResources, builderUses, company, docTopics, ecosystem, findPost, findProduct, findRole, integrationNote, integrations, markets, postRedirects, posts, products, roles, socials, stack } from "../data.js";
+import { apiResources, builderUses, company, docTopics, ecosystem, findPost, findProduct, integrationNote, integrations, markets, postRedirects, posts, products, roles, socials, stack } from "../data.js";
 import { BrandLogo } from "../components/logos.jsx";
 import { Faq, PageHero, TextLink } from "../components/ui.jsx";
+import { BotCheckDialog } from "../components/BotCheck.jsx";
+import { listRoles, submitApplication } from "../auth.js";
+
+function useOpenRoles() {
+  const [openRoles, setOpenRoles] = useState(roles);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    listRoles().then((next) => {
+      if (!active) return;
+      if (next) setOpenRoles(next);
+      setReady(true);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  return { openRoles, ready };
+}
 
 export function Products() {
   return (
@@ -339,6 +360,7 @@ export function Article() {
 }
 
 export function Careers() {
+  const { openRoles } = useOpenRoles();
   return (
     <>
       <PageHero
@@ -352,17 +374,14 @@ export function Careers() {
             <h2 className="display-s">Open Roles</h2>
           </div>
           <div className="job-grid">
-            {roles.map((role) => (
+            {openRoles.map((role) => (
               <article className="job" key={role.title}>
                 <h3>{role.slug ? <Link to={`/careers/${role.slug}`}>{role.title}</Link> : role.title}</h3>
                 <p className="muted">Location: {role.location}</p>
                 <p className="muted">Type: {role.type}</p>
-                <div style={{ marginTop: 16 }}>
-                  {role.slug ? (
-                    <TextLink to={`/careers/${role.slug}`}>View role</TextLink>
-                  ) : (
-                    <TextLink href={`mailto:${company.supportEmail}?subject=${encodeURIComponent(`Application — ${role.title}`)}`}>Apply</TextLink>
-                  )}
+                <div style={{ marginTop: 16, display: "flex", gap: 18, flexWrap: "wrap" }}>
+                  {role.slug ? <TextLink to={`/careers/${role.slug}`}>View role</TextLink> : null}
+                  <TextLink to={role.slug ? `/apply/${role.slug}` : "/apply"}>Apply</TextLink>
                 </div>
               </article>
             ))}
@@ -375,7 +394,9 @@ export function Careers() {
 
 export function Role() {
   const { slug } = useParams();
-  const role = findRole(slug);
+  const { openRoles, ready } = useOpenRoles();
+  const role = openRoles.find((item) => item.slug === slug);
+  if (!role && !ready) return null;
   if (!role) {
     return (
       <div className="wrap page-hero">
@@ -384,7 +405,6 @@ export function Role() {
       </div>
     );
   }
-  const apply = `mailto:${company.supportEmail}?subject=${encodeURIComponent(`Application — ${role.title}`)}`;
   return (
     <article className="band">
       <div className="wrap article prose" style={{ maxWidth: 760 }}>
@@ -408,10 +428,121 @@ export function Role() {
           </div>
         ))}
         <div style={{ marginTop: 28 }}>
-          <a className="btn" href={apply}>Apply</a>
+          <Link className="btn" to={`/apply/${role.slug}`}>Apply</Link>
         </div>
       </div>
     </article>
+  );
+}
+
+export function Apply() {
+  const { slug } = useParams();
+  const { openRoles, ready } = useOpenRoles();
+  const role = slug ? openRoles.find((item) => item.slug === slug) : null;
+  const [sent, setSent] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    setSent(false);
+    setPending(false);
+    setError("");
+  }, [slug]);
+
+  if (slug && !role && !ready) return null;
+  if (slug && !role) {
+    return (
+      <div className="wrap page-hero">
+        <h1 className="display-s">Role not found</h1>
+        <Link to="/careers">Back to careers</Link>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <PageHero
+        eyebrow="Careers"
+        title={role ? `Apply for ${role.title}.` : "Apply to Token Metrics."}
+        lede={role ? `${role.location}. ${role.type}.` : "Choose an open role and tell us how to reach you."}
+      />
+      <section className="band" style={{ paddingTop: 8 }}>
+        <div className="wrap" style={{ maxWidth: 640 }}>
+          {role ? (
+            <p style={{ margin: "0 0 16px" }}>
+              <Link className="muted" to={`/careers/${role.slug}`}>View the {role.title} role</Link>
+            </p>
+          ) : null}
+          {sent ? (
+            <div className="notice" style={{ marginBottom: 16 }}>
+              Your application is in. We'll write to {String(sent)}.
+            </div>
+          ) : null}
+          <form
+            className="form-grid panel"
+            key={role?.slug || "open"}
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const fd = new FormData(e.currentTarget);
+              setError("");
+              setPending(true);
+              const email = String(fd.get("email") || "");
+              try {
+                await submitApplication({
+                  name: fd.get("name"),
+                  email,
+                  role: fd.get("role"),
+                  location: fd.get("location"),
+                  link: fd.get("link"),
+                  note: fd.get("note"),
+                });
+                setSent(email);
+              } catch (err) {
+                setError(err.message);
+              } finally {
+                setPending(false);
+              }
+            }}
+          >
+            <div className="field">
+              <label htmlFor="apply-name">Name</label>
+              <input id="apply-name" required name="name" autoComplete="name" />
+            </div>
+            <div className="field">
+              <label htmlFor="apply-email">Email</label>
+              <input id="apply-email" type="email" required name="email" autoComplete="email" />
+            </div>
+            <div className="field">
+              <label htmlFor="apply-role">Role</label>
+              <select id="apply-role" name="role" required defaultValue={role?.title || ""}>
+                <option value="" disabled>Select a role</option>
+                {openRoles.map((item) => (
+                  <option key={item.slug || item.title} value={item.title}>{item.title}</option>
+                ))}
+              </select>
+            </div>
+            <div className="field">
+              <label htmlFor="apply-location">Where you are based</label>
+              <input id="apply-location" required name="location" autoComplete="country-name" />
+            </div>
+            <div className="field">
+              <label htmlFor="apply-link">LinkedIn, portfolio, or website</label>
+              <input id="apply-link" required name="link" placeholder="https://" />
+            </div>
+            <div className="field">
+              <label htmlFor="apply-note">Why this role</label>
+              <textarea id="apply-note" required name="note" />
+            </div>
+            {error ? <div className="form-error" role="alert">{error}</div> : null}
+            <BotCheckDialog />
+            <button className="btn" type="submit" disabled={pending}>{pending ? "Sending…" : "Apply"}</button>
+            <p className="muted" style={{ margin: 0, fontSize: 13 }}>
+              Your application is saved with Token Metrics. See the <Link to="/privacy">Privacy Policy</Link>.
+            </p>
+          </form>
+        </div>
+      </section>
+    </>
   );
 }
 

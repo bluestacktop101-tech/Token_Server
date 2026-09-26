@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout.jsx";
 import Home from "./pages/Home.jsx";
 import {
+  Apply,
   Article,
   Careers,
   Role,
@@ -18,6 +19,7 @@ import {
   Tokenization,
 } from "./pages/Pages.jsx";
 import { PrivacyPolicy, TermsOfService } from "./pages/LegalDocs.jsx";
+import { SignIn, SignUp } from "./pages/Auth.jsx";
 
 export default function App() {
   return (
@@ -35,8 +37,12 @@ export default function App() {
         <Route path="news/:slug" element={<Article />} />
         <Route path="careers" element={<Careers />} />
         <Route path="careers/:slug" element={<Role />} />
+        <Route path="apply" element={<Apply />} />
+        <Route path="apply/:slug" element={<Apply />} />
         <Route path="company" element={<Company />} />
         <Route path="contact" element={<Contact />} />
+        <Route path="sign-in" element={<SignIn />} />
+        <Route path="sign-up" element={<SignUp />} />
         <Route path="privacy" element={<PrivacyPolicy />} />
         <Route path="terms" element={<TermsOfService />} />
         <Route path="blog" element={<Navigate to="/news" replace />} />

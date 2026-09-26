@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Mark } from "./ui.jsx";
+import { signOut, useSession } from "../auth.js";
 
 const products = [
   { to: "/products/issuance", ic: "Is", title: "Issuance", desc: "Create, tokenize, and manage assets" },
@@ -38,6 +39,7 @@ function Rows({ items }) {
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const session = useSession();
   const [menu, setMenu] = useState(null);
   const [scrolled, setScrolled] = useState(false);
   const holdClosed = useRef(false);
@@ -189,6 +191,17 @@ export default function Nav() {
           </div>
         </nav>
         <div className="nav-right">
+          {session === undefined ? null : session ? (
+            <>
+              <span className="nav-user desk">{session.name}</span>
+              <button className="btn sm ghost desk" type="button" onClick={signOut}>Sign out</button>
+            </>
+          ) : (
+            <>
+              <Link className="nav-a desk" to="/sign-in">Sign in</Link>
+              <Link className="btn sm ghost desk" to="/sign-up">Sign up</Link>
+            </>
+          )}
           <Link className="btn sm desk" to="/contact">Talk to us</Link>
           <button className={`menu-toggle ${open ? "is-open" : ""}`} type="button" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen((v) => !v)}>
             <span />
@@ -211,6 +224,14 @@ export default function Nav() {
         ].map(([to, label]) => (
           <Link key={to} to={to} onClick={() => setOpen(false)}>{label}</Link>
         ))}
+        {session === undefined ? null : session ? (
+          <button className="linkish" type="button" onClick={() => { signOut(); setOpen(false); }}>Sign out</button>
+        ) : (
+          <>
+            <Link to="/sign-in" onClick={() => setOpen(false)}>Sign in</Link>
+            <Link to="/sign-up" onClick={() => setOpen(false)}>Sign up</Link>
+          </>
+        )}
         <Link className="btn" to="/contact" style={{ marginTop: 18 }} onClick={() => setOpen(false)}>Talk to us</Link>
       </div>
     </div>

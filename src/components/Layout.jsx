@@ -15,8 +15,11 @@ const titles = {
   "/community": "Community | Token Metrics",
   "/news": "News | Token Metrics",
   "/careers": "Careers | Token Metrics",
+  "/apply": "Apply | Token Metrics",
   "/company": "Company | Token Metrics",
   "/contact": "Contact | Token Metrics",
+  "/sign-in": "Sign in | Token Metrics",
+  "/sign-up": "Sign up | Token Metrics",
   "/privacy": "Privacy | Token Metrics",
   "/terms": "Terms | Token Metrics",
 };
@@ -25,14 +28,19 @@ export default function Layout() {
   const { pathname, hash } = useLocation();
   useSiteMotion();
   useEffect(() => {
+    const applyRole = pathname.startsWith("/apply/") ? findRole(pathname.slice("/apply/".length)) : null;
     const role = pathname.startsWith("/careers/") ? findRole(pathname.slice("/careers/".length)) : null;
     document.title = pathname.startsWith("/products/")
       ? "Product | Token Metrics"
       : pathname.startsWith("/news/")
         ? "News | Token Metrics"
-        : role
-          ? `${role.title} | Token Metrics`
-          : titles[pathname] || "Token Metrics";
+        : pathname === "/apply" || pathname.startsWith("/apply/")
+          ? applyRole
+            ? `Apply — ${applyRole.title} | Token Metrics`
+            : "Apply | Token Metrics"
+          : role
+            ? `${role.title} | Token Metrics`
+            : titles[pathname] || "Token Metrics";
     if (hash) {
       const el = document.querySelector(hash);
       if (el) {
