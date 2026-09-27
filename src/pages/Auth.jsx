@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signIn, signInWithOAuth, signOut, signUp, useSession } from "../auth.js";
 import { BotCheckDialog } from "../components/BotCheck.jsx";
-import { PageHero } from "../components/ui.jsx";
+import { Mark } from "../components/ui.jsx";
+import { company } from "../data.js";
 
 function GoogleMark() {
   return (
@@ -40,7 +41,7 @@ function SocialButtons({ onError }) {
   return (
     <div className="social-auth">
       <button className="btn social" type="button" disabled={!!busy} onClick={() => run("gmail")}>
-        <GoogleMark /> {busy === "gmail" ? "Opening Gmail…" : "Continue with Gmail"}
+        <GoogleMark /> {busy === "gmail" ? "Opening Google…" : "Continue with Google"}
       </button>
       <button className="btn social" type="button" disabled={!!busy} onClick={() => run("apple")}>
         <AppleMark /> {busy === "apple" ? "Opening Apple…" : "Continue with Apple"}
@@ -60,6 +61,32 @@ function AccountNotice() {
   );
 }
 
+function AuthFrame({ title, lede, children }) {
+  return (
+    <section className="auth-screen">
+      <aside className="auth-aside">
+        <Link to="/" className="auth-brand" aria-label="Token Metrics home">
+          <Mark size={28} />
+          {company.name}
+        </Link>
+        <div>
+          <p className="auth-kicker">{company.legalName}</p>
+          <h2>Infrastructure for tokenized assets.</h2>
+          <p>{company.location}</p>
+        </div>
+        <p className="auth-aside-foot">{company.address}</p>
+      </aside>
+      <div className="auth-main">
+        <div className="auth-card">
+          <h1>{title}</h1>
+          <p className="auth-lede">{lede}</p>
+          {children}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function SignIn() {
   const session = useSession();
   const navigate = useNavigate();
@@ -69,18 +96,14 @@ export function SignIn() {
   if (session === undefined) return null;
 
   return (
-    <>
-      <PageHero
-        eyebrow="Account"
-        title="Sign in."
-        lede="Use Gmail, Apple, or the email and password for your Token Metrics account."
-      />
-      <section className="band" style={{ paddingTop: 8 }}>
-        <div className="wrap" style={{ maxWidth: 640 }}>
+    <AuthFrame
+      title="Sign in"
+      lede="Use your work email, or continue with Google or Apple."
+    >
           <AccountNotice />
           {session ? null : (
             <form
-              className="form-grid panel"
+              className="form-grid auth-form"
               onSubmit={async (e) => {
                 e.preventDefault();
                 const fd = new FormData(e.currentTarget);
@@ -108,14 +131,12 @@ export function SignIn() {
               </div>
               <BotCheckDialog />
               <button className="btn" type="submit" disabled={pending}>{pending ? "Signing in…" : "Sign in"}</button>
-              <p className="muted" style={{ margin: 0, fontSize: 13 }}>
-                New to Token Metrics? <Link to="/sign-up">Create an account</Link>
+              <p className="auth-switch">
+                New to {company.name}? <Link to="/sign-up">Create an account</Link>
               </p>
             </form>
           )}
-        </div>
-      </section>
-    </>
+    </AuthFrame>
   );
 }
 
@@ -129,19 +150,15 @@ export function SignUp() {
   if (session === undefined) return null;
 
   return (
-    <>
-      <PageHero
-        eyebrow="Account"
-        title="Create an account."
-        lede="Create an account with Gmail, Apple, or your work email."
-      />
-      <section className="band" style={{ paddingTop: 8 }}>
-        <div className="wrap" style={{ maxWidth: 640 }}>
+    <AuthFrame
+      title="Create an account"
+      lede="Open a Token Metrics account for your organization."
+    >
           <AccountNotice />
           {message ? <div className="notice" style={{ marginBottom: 16 }}>{message}</div> : null}
           {session ? null : (
             <form
-              className="form-grid panel"
+              className="form-grid auth-form"
               onSubmit={async (e) => {
                 e.preventDefault();
                 const fd = new FormData(e.currentTarget);
@@ -202,13 +219,14 @@ export function SignUp() {
               </div>
               <BotCheckDialog />
               <button className="btn" type="submit" disabled={pending}>{pending ? "Creating account…" : "Create account"}</button>
-              <p className="muted" style={{ margin: 0, fontSize: 13 }}>
-                Already have an account? <Link to="/sign-in">Sign in</Link>. See the <Link to="/privacy">Privacy Policy</Link>.
+              <p className="auth-switch">
+                Already have an account? <Link to="/sign-in">Sign in</Link>
+              </p>
+              <p className="auth-legal">
+                By creating an account you agree to the <Link to="/terms">Terms</Link> and <Link to="/privacy">Privacy Policy</Link>.
               </p>
             </form>
           )}
-        </div>
-      </section>
-    </>
+    </AuthFrame>
   );
 }

@@ -937,6 +937,94 @@ footer a:hover { color: var(--muted); }
   padding: 12px 14px;
   font-size: 14px;
 }
+
+.auth-screen {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) 1.1fr;
+  min-height: calc(100vh - var(--nav-h));
+  border-bottom: 1px solid var(--line);
+}
+.auth-screen > * { min-width: 0; }
+.auth-aside {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+  min-height: 560px;
+  padding: 36px;
+  color: #fff;
+  background:
+    linear-gradient(180deg, rgba(16, 16, 16, 0.28), rgba(16, 16, 16, 0.72)),
+    url("/images/hero-bg.png") center 40% / cover no-repeat;
+}
+.auth-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+.auth-kicker {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+.auth-aside h2 {
+  max-width: 11ch;
+  margin: 12px 0 14px;
+  color: #fff;
+  font-size: clamp(36px, 4vw, 52px);
+}
+.auth-aside p { margin: 0; max-width: 34ch; color: rgba(255, 255, 255, 0.78); }
+.auth-aside-foot { font-size: 13px; color: rgba(255, 255, 255, 0.55); }
+.auth-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 48px 28px 64px;
+}
+.auth-card { width: min(420px, 100%); min-width: 0; }
+.auth-card h1 {
+  margin: 0;
+  font-size: 40px;
+}
+.auth-lede {
+  margin: 10px 0 22px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.5;
+  max-width: 36ch;
+  white-space: normal;
+}
+.auth-form .btn { width: 100%; }
+.auth-card .field input:focus {
+  border-color: #141414;
+  box-shadow: 0 0 0 3px rgba(20, 20, 20, 0.08);
+}
+.auth-switch, .auth-legal {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.auth-legal { font-size: 13px; }
+.auth-switch a, .auth-legal a {
+  color: var(--ink);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (max-width: 980px) {
+  .auth-screen { grid-template-columns: 1fr; }
+  .auth-aside { display: none; }
+  .auth-main { padding: 28px 20px 48px; }
+  .auth-card h1 { font-size: 34px; }
+  .auth-form #rto-captchaContainer { max-width: 100%; }
+  .auth-form .rto-checkbox-window { width: min(300px, 100%); }
+}
 .bot-dialog-card {
   position: relative;
   width: min(300px, 100%);
