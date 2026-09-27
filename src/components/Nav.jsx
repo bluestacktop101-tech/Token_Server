@@ -191,18 +191,21 @@ export default function Nav() {
           </div>
         </nav>
         <div className="nav-right">
-          {session === undefined ? null : session ? (
-            <>
-              <span className="nav-user desk">{session.name}</span>
-              <button className="btn sm ghost desk" type="button" onClick={signOut}>Sign out</button>
-            </>
-          ) : (
-            <>
-              <Link className="nav-a desk" to="/sign-in">Sign in</Link>
-              <Link className="btn sm ghost desk" to="/sign-up">Sign up</Link>
-            </>
-          )}
-          <Link className="btn sm desk" to="/contact">Talk to us</Link>
+          <div className="nav-actions desk">
+            {session === undefined ? null : session ? (
+              <>
+                <span className="nav-user">{session.name}</span>
+                <button className="nav-quiet" type="button" onClick={signOut}>Sign out</button>
+                <Link className="nav-quiet" to="/contact">Talk to us</Link>
+              </>
+            ) : (
+              <>
+                <Link className="nav-quiet" to="/sign-in">Sign in</Link>
+                <Link className="nav-quiet" to="/contact">Talk to us</Link>
+                <Link className="nav-cta" to="/sign-up">Sign up</Link>
+              </>
+            )}
+          </div>
           <button className={`menu-toggle ${open ? "is-open" : ""}`} type="button" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen((v) => !v)}>
             <span />
             <span />
@@ -227,12 +230,12 @@ export default function Nav() {
         {session === undefined ? null : session ? (
           <button className="linkish" type="button" onClick={() => { signOut(); setOpen(false); }}>Sign out</button>
         ) : (
-          <>
-            <Link to="/sign-in" onClick={() => setOpen(false)}>Sign in</Link>
-            <Link to="/sign-up" onClick={() => setOpen(false)}>Sign up</Link>
-          </>
+          <div className="mobile-auth">
+            <Link className="nav-quiet" to="/sign-in" onClick={() => setOpen(false)}>Sign in</Link>
+            <Link className="nav-cta" to="/sign-up" onClick={() => setOpen(false)}>Sign up</Link>
+            <Link className="nav-quiet wide" to="/contact" onClick={() => setOpen(false)}>Talk to us</Link>
+          </div>
         )}
-        <Link className="btn" to="/contact" style={{ marginTop: 18 }} onClick={() => setOpen(false)}>Talk to us</Link>
       </div>
     </div>
   );
